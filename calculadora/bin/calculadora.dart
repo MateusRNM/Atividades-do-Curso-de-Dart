@@ -7,11 +7,21 @@ void main() {
     print("ESCOLHA UMA OPERAÇÃO: +, -, / ou *:");
     operation = stdin.readLineSync()!;
   }
-  double num1, num2;
+  double? num1 = 0;
+  double? num2 = 0;
+  String? entrada;
   print("DIGITE O PRIMEIRO NÚMERO:");
-  num1 = double.parse(stdin.readLineSync()!);
+  entrada = stdin.readLineSync();
+  if(entrada != null && entrada != ""){
+    num1 = double.tryParse(entrada);
+    num1 = num1 ?? 0;
+  }
   print("DIGITE O SEGUNDO NÚMERO:");
-  num2 = double.parse(stdin.readLineSync()!);
+  entrada = stdin.readLineSync();
+  if(entrada != null && entrada != ""){
+    num2 = double.tryParse(entrada);
+    num2 = num2 ?? 0;
+  }
   double resultado;
   if(operation == "+"){
     resultado = num1 + num2;
