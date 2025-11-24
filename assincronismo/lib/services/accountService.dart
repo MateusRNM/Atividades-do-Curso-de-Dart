@@ -5,11 +5,11 @@ import 'dart:convert';
 import 'package:assincronismo/api_key.dart';
 
 class AccountService {
-  static final StreamController<String> _streamController = StreamController<String>();
-  static Stream<String> get streamInfos => _streamController.stream;
-  static final String _url = "https://api.github.com/gists/d2998989b001b396bb9d4a4b7a9129eb";
+  final StreamController<String> _streamController = StreamController<String>(sync: true);
+  Stream<String> get streamInfos => _streamController.stream;
+  final String _url = "https://api.github.com1/gists/d2998989b001b396bb9d4a4b7a9129eb";
 
-  static Future<List<Account>> getAll() async {
+  Future<List<Account>> getAll() async {
     final Response request = await get(Uri.parse(_url), headers: {
       "Accept": "application/vnd.github+json",
       "Authorization": "Bearer $apiToken",
@@ -20,10 +20,13 @@ class AccountService {
     for(dynamic dyn in content) {
       listAccounts.add(Account.fromMap(dyn as Map<String, dynamic>));
     }
+    for(Account acc in listAccounts) {
+      _streamController.add(acc.toString());
+    }
     return listAccounts;
   }
 
-  static addAccount(Account account) async {
+  addAccount(Account account) async {
     List<Account> accounts = await getAll();
     accounts.add(account);
     List<Map<String, dynamic>> listContent = [];
@@ -52,7 +55,7 @@ class AccountService {
     }
   }
 
-  static deleteAccount(Account account) async {
+  deleteAccount(Account account) async {
     List<Account> accounts = await getAll();
     accounts.removeWhere((obj) => obj == account);
     List<Map<String, dynamic>> listContent = [];
@@ -81,7 +84,7 @@ class AccountService {
     }
   }
 
-  static updateAccount(Account account) async {
+  updateAccount(Account account) async {
     List<Account> accounts = await getAll();
     int index = accounts.indexWhere((obj) => obj.id == account.id);
     if(index != -1) {
@@ -116,7 +119,7 @@ class AccountService {
     }
   }
 
-  static Future<Account?> getAccountById(String id) async {
+  Future<Account?> getAccountById(String id) async {
     List<Account> accounts = await getAll();
     int index = accounts.indexWhere((acc) => acc.id == id);
     if(index == -1) {

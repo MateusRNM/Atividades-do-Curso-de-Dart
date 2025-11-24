@@ -2,11 +2,14 @@ import 'dart:io';
 
 import 'package:assincronismo/models/accounts.dart';
 import 'package:assincronismo/services/accountService.dart';
+import 'package:http/http.dart';
 
 class AccountScreen {
 
+  final AccountService _accountService = AccountService();
+
   void initializeStream() {
-    AccountService.streamInfos.listen((event) {
+    _accountService.streamInfos.listen((event) {
       print(event);
     });
   }
@@ -16,14 +19,30 @@ class AccountScreen {
     bool isRunning = true;
 
 
-    void getAllAccounts() async {
-      List<Account> listAccounts = await AccountService.getAll();
-      print(listAccounts);
+    _getAllAccounts() async {
+      try {
+        await _accountService.getAll();
+      } on ClientException catch(error) {
+        print("Não foi possível alcançar o servidor.");
+        print("Tente novamente mais tarde.");
+        print(error.message);
+      } on Exception {
+        print("Não foi possível recuperar os dados dos usuários.");
+        print("Tente novamente mais tarde.");
+      }
     }
 
-    void addExampleAccount() async {
+    _addExampleAccount() async {
       Account example = Account(id: "ID01223", name: "Teste", lastName: "Conta", balance: 9000);
-      AccountService.addAccount(example);
+      try {
+        await _accountService.addAccount(example);
+      } on ClientException catch(error) {
+        print("Não foi possível alcançar o servidor.");
+        print("Tente novamente mais tarde.");
+        print(error.message);
+      } on Exception {
+        print("Não foi possível adicionar uma conta.");
+      }
     }
 
 
@@ -38,12 +57,12 @@ class AccountScreen {
         switch(input) {
           case "1":
               {
-                getAllAccounts();
+                await _getAllAccounts();
                 break;
               }
           case "2":
               {
-                addExampleAccount();
+                await _addExampleAccount();
                 break;
               }
           case "3":
