@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:assincronismo/models/accounts.dart';
+import 'package:assincronismo/models/account.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
 import 'package:assincronismo/api_key.dart';
@@ -7,7 +7,7 @@ import 'package:assincronismo/api_key.dart';
 class AccountService {
   final StreamController<String> _streamController = StreamController<String>(sync: true);
   Stream<String> get streamInfos => _streamController.stream;
-  final String _url = "https://api.github.com1/gists/d2998989b001b396bb9d4a4b7a9129eb";
+  final String _url = "https://api.github.com/gists/d2998989b001b396bb9d4a4b7a9129eb";
 
   Future<List<Account>> getAll() async {
     final Response request = await get(Uri.parse(_url), headers: {

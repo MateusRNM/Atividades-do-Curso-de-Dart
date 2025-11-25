@@ -1,4 +1,4 @@
-import 'package:assincronismo/screens/account_screen.dart';
+import 'package:dart_exceptions/screens/account_screen.dart';
 
 void main() {
   AccountScreen accountScreen = AccountScreen();
